@@ -2,6 +2,7 @@ package com.iotserv.flutter.plugin.flutter_oneshot;
 
 import android.app.Activity;
 import android.net.wifi.WifiManager;
+import android.util.Log;
 
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
@@ -9,6 +10,9 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 import com.winnermicro.smartconfig.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /** FlutterOneshotPlugin */
 public class FlutterOneshotPlugin implements MethodCallHandler {
@@ -46,13 +50,36 @@ public class FlutterOneshotPlugin implements MethodCallHandler {
         e.printStackTrace();
         timeout = 30;
       }
+      new Thread(new UDPReqThread(result)).start();
+    }
+    else {
+      result.notImplemented();
+    }
+  }
 
+  class UDPReqThread implements Runnable {
+    private Result result;
+    public UDPReqThread(Result result)
+    {
+      this.result = result;
+    }
+
+    public void run() {
       factory = new SmartConfigFactory();
       oneshotConfig = factory.createOneShotConfig(ConfigType.UDP);
       //      start config
       try {
+        Map<String, String> ret = new HashMap<String, String>();
         oneshotConfig.start(ssid, password, timeout, activity.getApplicationContext());
-        result.success("success!");
+        ret.put("result","success");
+        result.success(ret);
+      }
+      catch (OneShotException e) {
+        e.printStackTrace();
+        int code = e.getErrorID();
+        System.out.println(code);
+        Log.d("err", String.valueOf(code));
+        result.error("Fail", "config wifi fail.", null);
       }
       catch (Exception e) {
         e.printStackTrace();
@@ -61,9 +88,6 @@ public class FlutterOneshotPlugin implements MethodCallHandler {
       finally{
         oneshotConfig.stop(	);
       }
-    }
-    else {
-      result.notImplemented();
     }
   }
 
