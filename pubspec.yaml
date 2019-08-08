@@ -1,7 +1,7 @@
 name: flutter_oneshot
 description: OneShot for w60x wifi config
 version: 0.0.1
-author: IoTServ<newfarry@126.com>"
+author: IoTServ <newfarry@126.com>
 homepage: https://github.com/iotdevice/flutter_oneshot
 
 environment:
