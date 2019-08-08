@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:permission_handler/permission_handler.dart';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_oneshot/flutter_oneshot.dart';
 
 void main() {
-  requestPermission().then((_){
+  print(DateTime.now());
+  FlutterOneshot.start("wifi", "password", 30).then((v){
     print(DateTime.now());
-    FlutterOneshot.start("wifi", "password", 30).then((v){
-      print(DateTime.now());
-      print(v);
-    });
+    print(v);
   });
 
   runApp(MyApp());
@@ -63,22 +60,5 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
     );
-  }
-}
-
-Future<bool> requestPermission() async {
-  // 申请权限
-  Map<PermissionGroup, PermissionStatus> permissions =
-  await PermissionHandler().requestPermissions([
-    PermissionGroup.location,
-  ]);
-  // 申请结果
-  PermissionStatus permission = await PermissionHandler()
-      .checkPermissionStatus(PermissionGroup.location);
-  if (permission == PermissionStatus.granted) {
-    return true;
-  } else {
-//      提示失败！
-    return false;
   }
 }
