@@ -65,28 +65,27 @@ public class FlutterOneshotPlugin implements MethodCallHandler {
     }
 
     public void run() {
+      Map<String, String> ret = new HashMap<String, String>();
       factory = new SmartConfigFactory();
       oneshotConfig = factory.createOneShotConfig(ConfigType.UDP);
       //      start config
       try {
-        Map<String, String> ret = new HashMap<String, String>();
         oneshotConfig.start(ssid, password, timeout, activity.getApplicationContext());
-        ret.put("result","success");
-        result.success(ret);
       }
       catch (OneShotException e) {
+        Log.d("===oneshot-OneShotE===",e.getMessage());
         e.printStackTrace();
         int code = e.getErrorID();
-        System.out.println(code);
-        Log.d("err", String.valueOf(code));
-        result.error("Fail", "config wifi fail.", null);
+        Log.d("onshot err", String.valueOf(code));
       }
       catch (Exception e) {
+        Log.d("===oneshot-exception===",e.getMessage());
         e.printStackTrace();
-        result.error("Fail", "config wifi fail.", null);
-      }
-      finally{
+      } finally {
         oneshotConfig.stop(	);
+        ret.put("result","success");
+        Log.d("===oneshot-success===","success");
+//        result.success(ret);
       }
     }
   }
