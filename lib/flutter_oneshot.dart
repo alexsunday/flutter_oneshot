@@ -13,7 +13,7 @@ class FlutterOneshot {
 
   static Future start(String ssid, String pass, int timeout) async {
     try {
-      Map<String, dynamic> rm = new Map<String, dynamic>.from(await _channel.invokeMethod('start', {"ssid": ssid, "pass": pass, "timeout": timeout}));
+      Map<String, dynamic> rm = new Map<String, dynamic>.from(await _channel.invokeMethod('start', {"ssid": ssid, "password": pass, "timeout": timeout}));
       return rm;
     } catch(err){
       print("Error===, $err");
