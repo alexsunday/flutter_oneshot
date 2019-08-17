@@ -65,7 +65,7 @@ public class FlutterOneshotPlugin implements MethodCallHandler {
     }
 
     public void run() {
-      Map<String, String> ret = new HashMap<String, String>();
+      final Map<String, String> ret = new HashMap<String, String>();
       factory = new SmartConfigFactory();
       oneshotConfig = factory.createOneShotConfig(ConfigType.UDP);
       //      start config
@@ -85,7 +85,12 @@ public class FlutterOneshotPlugin implements MethodCallHandler {
         oneshotConfig.stop(	);
         ret.put("result","success");
         Log.d("===oneshot-success===","success");
-//        result.success(ret);
+        activity.runOnUiThread(new Runnable() {
+          @Override
+          public void run() {
+            result.success(ret);
+          }
+        });
       }
     }
   }
